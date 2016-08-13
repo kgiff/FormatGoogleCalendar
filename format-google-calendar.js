@@ -112,7 +112,8 @@ var formatGoogleCalendar = (function() {
 
     //Get all necessary data (dates, location, summary, description) and creates a list item
     var transformationList = function(result, tagName, format) {
-        var dateStart = getDateInfo(result.start.dateTime || result.start.date),
+        var blnDatesOnly = result.start.dateTime ? false : true,    // Determing if only dates were returned
+            dateStart = getDateInfo(result.start.dateTime || result.start.date, blnDatesOnly),
             dateEnd = getDateInfo(result.end.dateTime || result.end.date),
             dateFormatted = getFormattedDate(dateStart, dateEnd),
             output = '<' + tagName + '>',
@@ -160,8 +161,13 @@ var formatGoogleCalendar = (function() {
     };
 
     //Get temp array with information abou day in followin format: [day number, month number, year]
-    var getDateInfo = function(date) {
-        date = new Date(date);
+    var getDateInfo = function(date, blnAddADay) {
+        var date = new Date(date);
+        
+        // Full Day events are starting a day before they actually do, so add a day to the start day
+        if (blnAddADay) {
+            date.setDate(date.getDate() + 1);
+        }
         return [date.getDate(), date.getMonth(), date.getFullYear(), date.getHours(), date.getMinutes()];
     };
 
