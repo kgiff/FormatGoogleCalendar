@@ -183,8 +183,9 @@ var formatGoogleCalendar = (function() {
     //Transformations for formatting date into human readable format
     var formatDateSameDay = function(dateStart, dateEnd) {
         var formattedTime = '';
-
-        if (config.sameDayTimes) {
+        var blnDiffTime = (dateStart[3] !== dateEnd[3]) || (dateStart[4] !== dateEnd[4]);
+      
+        if (config.sameDayTimes && blnDiffTime) {
             formattedTime = ' from ' + getFormattedTime(dateStart) + ' - ' + getFormattedTime(dateEnd);
         }
 
